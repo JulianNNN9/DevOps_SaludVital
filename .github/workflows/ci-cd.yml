@@ -1,0 +1,43 @@
+name: CI/CD VitalApp
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Ejecutar pruebas
+        run: pytest tests/
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Login en Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Construir imagen Docker
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devops_saludvital:latest .
+
+      - name: Subir imagen a Docker Hub
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops_saludvital:latest

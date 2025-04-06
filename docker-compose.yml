@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  vitalapp:
+    image: juliannnn9/devops_saludvital:latest
+    container_name: devops_saludvital
+    restart: unless-stopped
+    working_dir: /app
+    command: ["pytest", "tests/"]
