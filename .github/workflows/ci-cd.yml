@@ -24,7 +24,9 @@ jobs:
           pip install pytest
 
       - name: Ejecutar pruebas
-        run: pytest tests/
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          pytest tests/
 
   docker:
     needs: test
