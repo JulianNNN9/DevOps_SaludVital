@@ -56,3 +56,5 @@ jobs:
       # Paso 4: Publicar la imagen en Docker Hub
       - name: Subir imagen a Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/devops_saludvital:latest
+
+        #aaa
